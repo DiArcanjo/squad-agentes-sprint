@@ -101,6 +101,46 @@
 - **Status**: active
 - **Resolvido (2026-07-14)**: a semântica da cerca `create/import-skills OFF` (AD-009) foi confirmada na UI do Paperclip — o **import humano no nível da empresa e o attach ao agente via `desiredSkills` funcionam** com a cerca ligada (a cerca contém o **agente** de auto-importar em runtime, não a Diana). A skill "Decomposição de Backlog" entrou como `sourceKind: github` trackando `main` (SHA `4e54566`, "Up to date") e foi anexada ao PO (Installed skill ativa). O fluxo git → Paperclip por *install-update* (1 clique) está operante para o método.
 
+### AD-012
+- **Decision**: A conexão Roadmap→Paperclip (feature 002) é um **pipeline de 4 agentes** — **Analista de Requisitos → (Tech Lead, sob demanda) → PO → Backlog Manager** — construído em **dois increments**: Increment 1 = a linha principal (Analista → PO → BM); Increment 2 = o Tech Lead como consulta técnica sob demanda.
+- **Reason**: O Roadmap só expõe **Contexto** (sem PRD — ADR-025 do Roadmap), então é preciso um papel que **crie o PRD** (Analista) e, para demandas técnicas, uma **fonte de verdade técnica** (Tech Lead). Sequenciar em increments contém o risco: o wake/handoff do Paperclip já é frágil e cada agente novo multiplica os pontos de travamento — valida-se a mainline antes do roteamento condicional.
+- **Trade-off**: Mais agentes e handoffs (superfície de orquestração maior) sobre um mecanismo de wake ainda não confiável. Mitigado pela sequência (mainline primeiro) e por manter o Tech Lead como **consulta**, não etapa fixa.
+- **Scope**: Feature 002 — arquitetura e sequência de construção.
+- **Date**: 2026-07-14
+- **Status**: active
+
+### AD-013
+- **Decision**: O fluxo Roadmap→Paperclip é **PULL via MCP**, não push. Quem fala MCP é o **runtime do agente** (Claude Code) que o Paperclip executa; ele chama a URL pública do Roadmap (`…/api/mcp`, Vercel, HTTPS) com a API key `rmcp_` (Secret no Paperclip, referenciada no `.mcp.json` de escopo projeto). A **barreira de rede** localhost↔Vercel fica **dissolvida por desenho** (o agente sai para a nuvem; o Roadmap não precisa alcançar o localhost).
+- **Reason**: Descoberto ao inspecionar `Roadmap/docs/Integracao-Paperclip.md` e `Spec-MCP-Server.md` (docs aprovados): o Paperclip não fala MCP direto; o cliente MCP é o runtime do agente. Isso reverte a premissa "push" do esqueleto antigo da spec 002 e elimina a necessidade de túnel/exposição do localhost.
+- **Trade-off**: A key vive como Secret no runtime do adapter (superfície a conter); depende da URL pública do Roadmap estar no ar.
+- **Scope**: Feature 002 — direção do fluxo e resolução da barreira de rede. Supera a premissa "push" do esqueleto anterior.
+- **Date**: 2026-07-14
+- **Status**: active
+
+### AD-014
+- **Decision**: Novo agente **Analista de Requisitos** — dono do MCP do Roadmap (**read-only**, papel `gerente_projeto`), cria o **PRD** a partir do Contexto e o entrega ao PO. É quem **puxa** a fila (`listar_iniciativas {priorizada:true, semSprint:true}`) e lê o conteúdo (`obter_contexto {codigo}`). Papel estreito: cria PRD, não decompõe (PO), não prioriza nem marca sprint (humano), não escreve no Azure (BM).
+- **Reason**: Preenche a lacuna do PRD sem sobrecarregar o PO nem quebrar sua identidade. Concentra a conexão com o Roadmap num só agente read-only.
+- **Trade-off**: Um agente a mais no pipeline; handoff Analista→PO a projetar (Increment 1).
+- **Scope**: Feature 002 — Increment 1.
+- **Date**: 2026-07-14
+- **Status**: active
+
+### AD-015
+- **Decision**: O **AS-IS/TO-BE** (inclusive o técnico) migra do PO para o **Analista de Requisitos**, entregue **dentro do PRD**. O PO passa a **consumir** o AS-IS/TO-BE, não produzir o técnico.
+- **Reason**: Aderência ao Scrum — o PO é papel de valor/negócio (o quê/porquê); o "como"/estado técnico atual é do time de desenvolvimento, não do PO. A DoR anterior punha "AS-IS/TO-BE técnico" no colo do PO, o que excedia o papel. Com o Analista (papel de análise de requisitos) existindo, o AS-IS/TO-BE é dele.
+- **Trade-off**: A skill Decomposição de Backlog (DoR) precisa de ajuste para refletir que o PO **consome** o AS-IS/TO-BE em vez de produzir o técnico (a fazer na construção do Increment 1).
+- **Scope**: Feature 002 — fronteira de papel PO ↔ Analista.
+- **Date**: 2026-07-14
+- **Status**: active
+
+### AD-016
+- **Decision**: **Nenhum agente do Paperclip escreve de volta no Roadmap.** A marcação de sprint é **humana** (UI do Roadmap). O dedup do Analista vem da **própria memória** (histórico no Paperclip): antes de criar um PRD para um `codigo`, ele checa se já o tratou e pula se sim. Descartada a **escrita de sprint** pelo agente (`atribuir_sprint`, que o `Integracao-Paperclip.md`/ADR-031 do Roadmap previa como sinal de dedup).
+- **Reason**: No momento da decomposição o agente **não sabe** a sprint real (decidida depois, no poker) — logo escrever sprint seria provisório e frágil. Manter a marcação humana + dedup por memória preserva a pureza read-only do pipeline e evita o reprocessamento da fila `semSprint`.
+- **Trade-off**: O dedup depende de o Analista enxergar de forma confiável o próprio histórico no Paperclip; se essa memória falhar, há risco de reprocessar. A ser validado na construção do Increment 1.
+- **Scope**: Feature 002 — dedup e fronteira de escrita no Roadmap.
+- **Date**: 2026-07-14
+- **Status**: active
+
 ---
 
 ## Aprendizados
@@ -123,7 +163,7 @@ Pendências conhecidas no momento desta documentação. Não inventar respostas 
 - **Investigar Routines/Goals do Paperclip** para tornar o wake pós-aprovação confiável (relacionado a AD-006 e ao aprendizado sobre o PO não reacordar).
 - **`PAPERCLIP_API_KEY` no ambiente dos agentes**: dá poder de escrita interno no Paperclip, e os agentes a descobrem sozinhos. A estudar e conter.
 - **Refinador-agente** (validador da Definition of Ready) decidido como próximo agente, ainda não construído. Deve ser ancorado em determinismo máximo (regras explícitas, saída estruturada). **Discrepância detectada (13/07/2026)**: o `agentes/po/TOOLS.md` já descreve o Refinador como validador **operacional** ("O Refinador audita a prontidão dos PBIs que você produz… um produz, o outro valida"), o que conflita com "ainda não construído". A confirmar com a Diana: o Refinador já existe, ou o texto no TOOLS.md é instrução prospectiva sobre um colaborador futuro? Enquanto não resolvido, tratar como não construído.
-- **Conexão roadmap → Paperclip (feature 002)**: ver `features/002-conexao-roadmap-paperclip/spec.md`. Pendência de rede conhecida — roadmap na nuvem (Vercel), Paperclip em localhost.
+- **Conexão roadmap → Paperclip (feature 002)**: ver `features/002-conexao-roadmap-paperclip/spec.md`. **Desenho fechado em Specify (14/07/2026)**: pipeline de 4 agentes (Analista de Requisitos → Tech Lead sob demanda → PO → Backlog Manager), PULL via MCP (AD-012..016). A **barreira de rede localhost↔Vercel deixou de ser bloqueio** (AD-013): o cliente MCP é o runtime do agente, que chama a Vercel por HTTPS. **Pendências da construção**: (a) criar os agentes Analista e Tech Lead; (b) ajustar a Entrada do PO (produtor = Analista) e a DoR da skill (PO consome AS-IS/TO-BE, não produz o técnico — AD-015); (c) validar o papel read-only da key do Analista no Roadmap; (d) validar o dedup por memória do Analista; (e) o wake pós-ativação continua não confiável (herdado do AD-006).
 - **Reference name do campo "História de Usuário" do PBI no Azure (não confirmado)**: o reference name interno do campo customizado não foi confirmado na sandbox `dianasandbox`. No `agentes/backlog-manager/TOOLS.md` o mapeamento de `historia_usuario` (PBI) está genérico ("campo de História de Usuário do PBI"). No teste E2E de 09/07/2026 a escrita funcionou, então ou o campo existe com um nome que o `az` aceitou, ou a história caiu na Description. **Pendência**: rodar `az boards work-item show` em um PBI criado, identificar onde a história foi parar e qual o reference name real do campo, e então fixar esse nome exato no `TOOLS.md` do Backlog Manager. **Não é bloqueante** (a escrita funciona) — é precisão de mapeamento. Relacionado a AD-005 e ao requisito POBM-12 da feature 001.
 - **Sincronização Paperclip ↔ repo (pendente)**: os 7 arquivos de agente alterados nesta sessão estão versionados no git, mas o **Paperclip ainda roda as versões antigas** — falta colar o conteúdo novo de volta na UI. Alterados: `po/HEARTBEAT.md`, `po/AGENTS.md`, `po/SOUL.md`, `po/TOOLS.md`, `bm/HEARTBEAT.md`, `bm/AGENTS.md`, `bm/SOUL.md`. Sem mudança real: `po/DECOMPOSICAO.md`, `bm/TOOLS.md`. **Importante**: enquanto não sincronizado, o handoff Forma B (AD-010) não está ativo no runtime — o Paperclip ainda tem a versão anterior do handoff. **A repetir a cada edição futura destes arquivos** (o repo é a fonte de verdade; o Paperclip precisa ser atualizado a partir dele). **Nuance (AD-011)**: apenas o **método** (skill `skills/decomposicao-backlog/`) ganha o fluxo de import git + *install-update* (1 clique); os arquivos de **definição de agente** continuam sincronizados à mão por decisão consciente (a doc do Paperclip não expõe git-import para definição de agente).
 - **Consolidar a duplicação do schema `decomposicao_json` (pendente)**: o schema aparece em 3+ lugares — `contratos/decomposicao-json-schema.md` (canônico do time), `skills/decomposicao-backlog/references/decomposicao-json-schema.md` (autossuficiência da skill) e embutido no `agentes/po/DECOMPOSICAO.md` (arquivo chapado a ser aposentado). Risco de divergência. Decidir a fonte canônica única e fazer os demais apontarem para ela quando a skill for validada e o `DECOMPOSICAO.md` colapsado.
