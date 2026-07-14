@@ -73,7 +73,8 @@
 - **Trade-off**: Não aproveita o mecanismo de skills do Paperclip (descoberta/versionamento nativo); é apenas um arquivo de instrução lido pelo PO.
 - **Scope**: Feature 001 — forma de empacotar o método de decomposição do PO.
 - **Date**: 2026-07-13
-- **Status**: active
+- **Status**: superseded by AD-011 (2026-07-14)
+- **Correção (2026-07-14)**: a premissa do Reason está factualmente errada diante da doc do Paperclip (`/reference/skills/`). Uma skill não precisa ser criada na aba de arquivos — pode ser **importada** (`sourceKind` `github`/`url`/`local_path`/scan de projeto). Como este repo é versionado em git e já contém uma skill em pasta (`tlc-spec-driven`), o método pode virar `SKILL.md` importado do git. Ver AD-011.
 
 ### AD-009
 - **Decision**: **Cercas de contenção** dos agentes: heartbeat sem intervalo (só *wake on demand*), *Continue after max-turn* OFF, *create-agents* OFF, *create/import-skills* OFF, *max concurrent* = 1.
@@ -90,6 +91,15 @@
 - **Scope**: Feature 001 — mecanismo de transporte e autorização do handoff. Refina AD-006.
 - **Date**: 2026-07-13
 - **Status**: active
+
+### AD-011
+- **Decision**: O método de decomposição passa a ser empacotado como **skill do Paperclip no padrão `SKILL.md`** (pasta `skills/decomposicao-backlog/` com frontmatter + `references/`), versionada no git como fonte de verdade, para ser **importada no Paperclip via `sourceKind` git** e atualizada por *install-update* (1 clique). Supera o AD-008. O arquivo chapado `agentes/po/DECOMPOSICAO.md` fica preservado por ora (para comparação) e será colapsado na skill depois de validada.
+- **Reason**: (1) A premissa do AD-008 (skill exige criação na aba de arquivos) é falsa — skills podem ser importadas do git. (2) Git como fonte única de verdade elimina o copy-paste manual do método para o Paperclip. (3) **Reuso**: o Refinador planejado (validador da DoR) precisa do mesmo método (INVEST/DoR/SPIDR) — uma skill company-level anexável aos dois agentes via `desiredSkills` é o lar natural do "um produz, o outro valida".
+- **Trade-off**: (1) O update do git **não é automático** — é *update-status* → *install-update* (1 clique, sem polling); melhor que colar, mas não zero-touch. (2) Só o **método** ganha esse fluxo; os arquivos de definição de agente (`SOUL`/`AGENTS`/`TOOLS`/`HEARTBEAT`) **não** têm git-import na doc do Paperclip e continuam sincronizados **à mão** — decisão consciente da Diana (aceitável, pois esses arquivos são a maior parte do churn mas o ganho de sync não os cobre). (3) O schema `decomposicao_json` fica em mais um lugar (`skills/decomposicao-backlog/references/`) até a duplicação com `contratos/` ser consolidada.
+- **Scope**: Feature 001 — forma de empacotar o método de decomposição; substitui AD-008.
+- **Date**: 2026-07-14
+- **Status**: active
+- **Aberto**: confirmar a semântica da cerca `create/import-skills OFF` do AD-009 — se ela bloqueia o **agente** de auto-importar em runtime (esperado) mas **permite** import humano no nível da empresa + `desiredSkills`. Enquanto não confirmado, tratar a import como ação humana a validar na UI do Paperclip.
 
 ---
 
@@ -115,7 +125,8 @@ Pendências conhecidas no momento desta documentação. Não inventar respostas 
 - **Refinador-agente** (validador da Definition of Ready) decidido como próximo agente, ainda não construído. Deve ser ancorado em determinismo máximo (regras explícitas, saída estruturada). **Discrepância detectada (13/07/2026)**: o `agentes/po/TOOLS.md` já descreve o Refinador como validador **operacional** ("O Refinador audita a prontidão dos PBIs que você produz… um produz, o outro valida"), o que conflita com "ainda não construído". A confirmar com a Diana: o Refinador já existe, ou o texto no TOOLS.md é instrução prospectiva sobre um colaborador futuro? Enquanto não resolvido, tratar como não construído.
 - **Conexão roadmap → Paperclip (feature 002)**: ver `features/002-conexao-roadmap-paperclip/spec.md`. Pendência de rede conhecida — roadmap na nuvem (Vercel), Paperclip em localhost.
 - **Reference name do campo "História de Usuário" do PBI no Azure (não confirmado)**: o reference name interno do campo customizado não foi confirmado na sandbox `dianasandbox`. No `agentes/backlog-manager/TOOLS.md` o mapeamento de `historia_usuario` (PBI) está genérico ("campo de História de Usuário do PBI"). No teste E2E de 09/07/2026 a escrita funcionou, então ou o campo existe com um nome que o `az` aceitou, ou a história caiu na Description. **Pendência**: rodar `az boards work-item show` em um PBI criado, identificar onde a história foi parar e qual o reference name real do campo, e então fixar esse nome exato no `TOOLS.md` do Backlog Manager. **Não é bloqueante** (a escrita funciona) — é precisão de mapeamento. Relacionado a AD-005 e ao requisito POBM-12 da feature 001.
-- **Sincronização Paperclip ↔ repo (pendente)**: os 7 arquivos de agente alterados nesta sessão estão versionados no git, mas o **Paperclip ainda roda as versões antigas** — falta colar o conteúdo novo de volta na UI. Alterados: `po/HEARTBEAT.md`, `po/AGENTS.md`, `po/SOUL.md`, `po/TOOLS.md`, `bm/HEARTBEAT.md`, `bm/AGENTS.md`, `bm/SOUL.md`. Sem mudança real: `po/DECOMPOSICAO.md`, `bm/TOOLS.md`. **Importante**: enquanto não sincronizado, o handoff Forma B (AD-010) não está ativo no runtime — o Paperclip ainda tem a versão anterior do handoff. **A repetir a cada edição futura destes arquivos** (o repo é a fonte de verdade; o Paperclip precisa ser atualizado a partir dele).
+- **Sincronização Paperclip ↔ repo (pendente)**: os 7 arquivos de agente alterados nesta sessão estão versionados no git, mas o **Paperclip ainda roda as versões antigas** — falta colar o conteúdo novo de volta na UI. Alterados: `po/HEARTBEAT.md`, `po/AGENTS.md`, `po/SOUL.md`, `po/TOOLS.md`, `bm/HEARTBEAT.md`, `bm/AGENTS.md`, `bm/SOUL.md`. Sem mudança real: `po/DECOMPOSICAO.md`, `bm/TOOLS.md`. **Importante**: enquanto não sincronizado, o handoff Forma B (AD-010) não está ativo no runtime — o Paperclip ainda tem a versão anterior do handoff. **A repetir a cada edição futura destes arquivos** (o repo é a fonte de verdade; o Paperclip precisa ser atualizado a partir dele). **Nuance (AD-011)**: apenas o **método** (skill `skills/decomposicao-backlog/`) ganha o fluxo de import git + *install-update* (1 clique); os arquivos de **definição de agente** continuam sincronizados à mão por decisão consciente (a doc do Paperclip não expõe git-import para definição de agente).
+- **Consolidar a duplicação do schema `decomposicao_json` (pendente)**: o schema aparece em 3+ lugares — `contratos/decomposicao-json-schema.md` (canônico do time), `skills/decomposicao-backlog/references/decomposicao-json-schema.md` (autossuficiência da skill) e embutido no `agentes/po/DECOMPOSICAO.md` (arquivo chapado a ser aposentado). Risco de divergência. Decidir a fonte canônica única e fazer os demais apontarem para ela quando a skill for validada e o `DECOMPOSICAO.md` colapsado.
 
 ---
 
