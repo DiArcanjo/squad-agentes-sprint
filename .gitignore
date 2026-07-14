@@ -1,2 +1,10 @@
 node_modules/
 .DS_Store
+
+# Config de editor / ferramentas de agente (específico de máquina)
+.agents/
+.cursor/
+.windsurf/
+
+# Settings locais do Claude Code (pessoais — não versionar; a skill em .claude/skills/ é versionada)
+.claude/settings.local.json
