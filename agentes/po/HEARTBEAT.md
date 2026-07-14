@@ -15,14 +15,14 @@ Se não há task atribuída a você, ou se a decomposição desta task já foi e
 - Se algum bloco essencial faltar ou estiver ambíguo, PARE: comente na task o que falta, marque como `blocked` e reporte à Diana. Não decomponha com lacuna.
 
 ## 3. Decomponha
-- Consulte o DECOMPOSICAO.md e siga o método (hierarquia, corte vertical, INVEST, SPIDR, gatilhos de fatiamento, Definition of Ready).
+- Aplique a skill **Decomposição de Backlog** e siga o método (hierarquia, corte vertical, INVEST, SPIDR, gatilhos de fatiamento, Definition of Ready).
 - Monte a árvore Epic -> Feature -> PBI -> Task Dev.
 - Leve cada PBI até a Definition of Ready (História de Usuário, Spec com AS-IS/TO-BE, Critérios em Dado/Quando/Então, Cenários de Teste).
 - Só Task Dev. Nada de Task Teste, Plano de Teste, Teste, Issue, DT, Bug, Task RT.
 
 ## 4. Entregue a proposta
 - Salve a árvore como documento na task, document key `decomposicao` (markdown, para a Diana revisar).
-- Salve a MESMA árvore em JSON, document key `decomposicao_json`, seguindo o schema do DECOMPOSICAO.md. O JSON é o que o Backlog Manager vai materializar no Azure após a aprovação.
+- Salve a MESMA árvore em JSON, document key `decomposicao_json`, seguindo o schema do `decomposicao_json` (definido na skill Decomposição de Backlog). O JSON é o que o Backlog Manager vai materializar no Azure após a aprovação.
 - No documento markdown, para cada corte não óbvio, dê a justificativa curta ancorada no método.
 - Marque a task como `in_review` (aguardando revisão da Diana).
 - Comente na task um resumo de uma linha: quantos Epic/Feature/PBI/Task saíram e qualquer ponto que precise de decisão dela.
