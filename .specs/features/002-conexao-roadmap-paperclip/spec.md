@@ -199,25 +199,25 @@ já é frágil (questão em aberto herdada da 001) e cada agente novo multiplica
 
 | Requirement ID | Story | Increment | Phase | Status |
 | -------------- | ----- | --------- | ----- | ------ |
-| CRP-01 | P1: Analista puxa a fila (listar_iniciativas priorizada+semSprint) | 1 | Specify | Pendente |
-| CRP-02 | P1: Analista obtém conteúdo (obter_contexto por código) | 1 | Specify | Pendente |
-| CRP-03 | P1: Analista cria o PRD (negócio) e entrega ao PO | 1 | Specify | Pendente |
-| CRP-04 | P1: Analista para/reporta com Contexto insuficiente | 1 | Specify | Pendente |
-| CRP-05 | P1: Analista read-only no Roadmap (não escreve) | 1 | Specify | Pendente |
-| CRP-06 | P1: Analista dedup por memória (não recria PRD) | 1 | Specify | Pendente |
-| CRP-07 | P1: PO recebe o PRD do Analista (Entrada: produtor = Analista) | 1 | Specify | Pendente |
-| CRP-08 | P1: PO consome AS-IS/TO-BE do PRD, não produz o técnico | 1 | Specify | Pendente |
+| CRP-01 | P1: Analista puxa a fila (listar_iniciativas priorizada+semSprint) | 1 | Execute | Repo ✓ / Paperclip pendente |
+| CRP-02 | P1: Analista obtém conteúdo (obter_contexto por código) | 1 | Execute | Repo ✓ / Paperclip pendente |
+| CRP-03 | P1: Analista cria o PRD (negócio) e entrega ao PO | 1 | Execute | Repo ✓ / Paperclip pendente |
+| CRP-04 | P1: Analista para/reporta com Contexto insuficiente | 1 | Execute | Repo ✓ / Paperclip pendente |
+| CRP-05 | P1: Analista read-only no Roadmap (não escreve) | 1 | Execute | Repo ✓ / Paperclip pendente |
+| CRP-06 | P1: Analista dedup por memória (não recria PRD) | 1 | Execute | Repo ✓ / Paperclip pendente |
+| CRP-07 | P1: PO recebe o PRD do Analista (Entrada: produtor = Analista) | 1 | Execute | Repo ✓ / Paperclip pendente |
+| CRP-08 | P1: PO consome AS-IS/TO-BE do PRD, não produz o técnico | 1 | Execute | Repo ✓ / Paperclip pendente |
 | CRP-09 | P2: Tech Lead fornece AS-IS/TO-BE técnico ancorado | 2 | Specify | Pendente |
 | CRP-10 | P2: Tech Lead para/reporta fora do alcance | 2 | Specify | Pendente |
 | CRP-11 | P2: Analista integra a resposta do Tech Lead no PRD | 2 | Specify | Pendente |
 | CRP-12 | P2: Analista roteia ao Tech Lead só quando técnico e sem contexto | 2 | Specify | Pendente |
-| CRP-13 | P2: Contenção/credencial do Analista (read-only, Secret, cercas) | 1 | Specify | Pendente |
+| CRP-13 | P2: Contenção/credencial do Analista (read-only, Secret, cercas) | 1 | Execute | Repo ✓ / Paperclip pendente |
 
 **ID format:** `CRP-[NUMBER]` (Conexão Roadmap-Paperclip).
 
-**Status values:** Pendente → Em Design → Config → Validado.
+**Status values:** Pendente → Em Design → Repo ✓ / Paperclip pendente → Validado.
 
-**Coverage:** 13 requisitos. Increment 1 (mainline): CRP-01..08, CRP-13. Increment 2 (Tech Lead): CRP-09..12. Nenhum mapeado a config ainda — a construção começa após a confirmação desta spec.
+**Coverage:** 13 requisitos. **Increment 1 (mainline) — CRP-01..08, CRP-13 — escrito no repo** (arquivos do Analista em `agentes/analista-requisitos/`; Entrada do PO e DoR da skill ajustadas). Falta: sincronizar no Paperclip (criar o agente Analista, colar os 4 arquivos, gerar a key `rmcp_` read-only, configurar `.mcp.json`, re-importar a skill por *install-update*) e o **teste funcional manual**. **Increment 2 (Tech Lead): CRP-09..12** — ainda não construído.
 
 ---
 

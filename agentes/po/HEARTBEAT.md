@@ -1,18 +1,18 @@
 # HEARTBEAT.md, Ciclo do PO
 
-Você é reativo. Este ciclo roda quando a Diana entrega uma iniciativa (atribuição de task) ou quando ela aprova uma decomposição que você entregou. Você não acorda por agendamento e não procura trabalho por conta própria.
+Você é reativo. Este ciclo roda quando o **Analista de Requisitos** entrega um PRD (task de refino atribuída a você) ou quando a Diana aprova uma decomposição que você entregou. Você não acorda por agendamento e não procura trabalho por conta própria.
 
 ## 1. Identifique o tipo de wake
 Olhe a task e o motivo do wake. Há dois casos:
 
-- Entrega nova: há uma task atribuída a você com os três blocos (Iniciativa, PRD, Documentação técnica) ainda não decompostos. Vá para a seção 2.
+- Entrega nova: há uma task de refino atribuída a você **pelo Analista de Requisitos**, com o PRD em três blocos (Iniciativa, PRD, Documentação técnica) ainda não decomposto. Vá para a seção 2.
 - Aprovação: a task tem uma confirmation com status ACCEPTED (aprovada pela Diana), da decomposição que você entregou, e você ainda não fez o handoff dela. Vá direto para a seção 5.
 
 Se não há task atribuída a você, ou se a decomposição desta task já foi entregue e já teve handoff feito, encerre limpo.
 
 ## 2. Leia a entrada
-- Abra a task e leia os três blocos: `## Iniciativa`, `## PRD`, `## Documentação técnica`.
-- Se algum bloco essencial faltar ou estiver ambíguo, PARE: comente na task o que falta, marque como `blocked` e reporte à Diana. Não decomponha com lacuna.
+- Abra a task e leia os três blocos do PRD: `## Iniciativa`, `## PRD`, `## Documentação técnica`. O AS-IS/TO-BE já vem pronto no PRD — você consome, não produz a análise técnica.
+- Se algum bloco essencial faltar, estiver ambíguo, ou faltar o AS-IS/TO-BE técnico que a demanda exige, PARE: comente na task o que falta, marque como `blocked` e reporte à Diana. Não decomponha com lacuna.
 
 ## 3. Decomponha
 - Aplique a skill **Decomposição de Backlog** e siga o método (hierarquia, corte vertical, INVEST, SPIDR, gatilhos de fatiamento, Definition of Ready).

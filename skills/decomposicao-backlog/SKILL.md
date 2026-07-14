@@ -36,7 +36,7 @@ níveis de portfólio (da Diana), acima do que você decompõe — você começa
 ## Definition of Ready (o PBI só está pronto com os quatro)
 
 1. História de Usuário: "Como <ator>, quero <objetivo>, para <benefício>."
-2. Spec: Contexto da demanda, mais AS-IS (situação atual) e TO-BE (situação desejada), no nível que a demanda pedir. Técnico quando a demanda é técnica, de processo ou negócio quando não. Use a Documentação técnica para o AS-IS/TO-BE técnico.
+2. Spec: Contexto da demanda, mais AS-IS (situação atual) e TO-BE (situação desejada), no nível que a demanda pedir. O AS-IS/TO-BE vem pronto no PRD (produzido pelo Analista de Requisitos; o técnico, pelo Tech Lead quando a demanda é técnica). Você **deriva** o Spec de cada PBI a partir do PRD — não origina a análise técnica. Se o PRD não trouxer o AS-IS/TO-BE técnico que a demanda exige, PARE e reporte.
 3. Critérios de Aceite: em Dado/Quando/Então, testáveis.
 4. Cenários de Teste: registrados no PBI (shift-left, o teste nasce no refinamento). Você NÃO cria a Task Teste; só registra os cenários dentro do PBI.
 

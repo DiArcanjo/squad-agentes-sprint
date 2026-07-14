@@ -172,14 +172,15 @@ Pendências conhecidas no momento desta documentação. Não inventar respostas 
 
 ## Handoff
 
-- **Feature**: Feature 001 (sistema PO + Backlog Manager) documentada e versionada. Handoff PO→BM migrado para a Forma B (AD-010).
-- **Phase / Task**: Specify concluída para 001. Fundação, conteúdo real dos 9 arquivos de agente, migração Forma B e higiene do repo — tudo commitado e pushado (`main` até `325a842`). Feature 002 permanece esqueleto (não iniciada).
-- **Completed**: `.specs/` (STATE com AD-001..AD-010, aprendizados, questões em aberto; spec 001 com POBM-01..22; esqueleto spec 002); `contratos/`; 9 arquivos de agente com conteúdo real; skill `.claude/skills/` versionada; `.gitignore` para config de editor e settings locais.
-- **In-progress** (file:line): none. Working tree limpo, `main` em dia com `origin/main`.
+- **Feature**: 001 (PO + Backlog Manager) documentada e versionada; método migrado para skill (AD-011). **002 (conexão roadmap→Paperclip)** com Specify fechada e **Increment 1 escrito no repo**.
+- **Phase / Task**: 002 em **Execute (Increment 1)**. Criados os 4 arquivos do **Analista de Requisitos** (`agentes/analista-requisitos/`); ajustadas a Entrada do PO (produtor = Analista) e a DoR da skill (PO consome AS-IS/TO-BE — AD-015). Increment 2 (Tech Lead) ainda não construído.
+- **Completed**: `.specs/` (STATE com AD-001..AD-016; spec 001 POBM-01..22; spec 002 CRP-01..13); `contratos/`; skill `skills/decomposicao-backlog/` (importada no Paperclip e anexada ao PO); agentes PO + Backlog Manager + **Analista de Requisitos** com conteúdo real; `agentes/po/DECOMPOSICAO.md` colapsado em tombstone.
+- **In-progress** (file:line): none no repo. Increment 1 escrito; falta sincronizar no Paperclip.
 - **Next step (próximos passos da Diana, fora do repo)**:
-  1. **Sincronizar o Paperclip a partir do repo** — colar na UI o conteúdo novo dos 7 arquivos alterados (ver Questões em aberto: "Sincronização Paperclip ↔ repo"). Sem isso, a Forma B não está ativa no runtime.
-  2. **Rodar o teste E2E partindo do roadmap** — roadmap → Paperclip → PO decompõe → Diana aprova → handoff Forma B → Backlog Manager materializa em `dianasandbox/agentic-sprint`. Atenção: a conexão roadmap→Paperclip (feature 002) tem pendência de rede (Vercel ↔ localhost); o wake pós-aprovação pode precisar de *Run Heartbeat* manual.
-- **Blockers**: (1) Paperclip ainda não sincronizado com o repo. (2) Feature 002 depende de resolver a exposição de rede (localhost ↔ Vercel) para o e2e partir de fato do roadmap.
-- **Uncommitted files**: none.
+  1. **Sincronizar o Paperclip com o Increment 1**: criar o agente **Analista de Requisitos** no Paperclip e colar os 4 arquivos (`agentes/analista-requisitos/`); colar as edições da Entrada do PO (`po/AGENTS.md`, `po/HEARTBEAT.md`, `po/SOUL.md`); re-importar a skill Decomposição de Backlog por *install-update* (a DoR mudou). Aplicar as cercas do AD-009 no Analista.
+  2. **Gerar a key `rmcp_` read-only** no Roadmap (`/agentes`, papel `gerente_projeto`), cadastrar como Secret no Paperclip e apontar o `.mcp.json` do runtime do Analista para `…/api/mcp` (passo a passo em `Roadmap/docs/Integracao-Paperclip.md`).
+  3. **Teste funcional do Increment 1**: com uma iniciativa priorizada e sem sprint no Roadmap, ativar o Analista → PRD → PO decompõe → Diana aprova → handoff Forma B → Backlog Manager materializa. Validar o dedup (ativar o Analista 2x, PRD só na 1ª).
+- **Blockers**: (1) Paperclip não sincronizado com o Increment 1. (2) Wake pós-ativação/aprovação ainda não confiável (herdado do AD-006). (A barreira de rede localhost↔Vercel deixou de ser blocker — AD-013.)
+- **Uncommitted files**: os arquivos do Increment 1 (a commitar nesta sessão).
 - **Branch**: main
-- **Ao retomar**: quando o e2e rodar, trazer o resultado — se a Forma B funcionar ponta a ponta, vira aprendizado que fecha (ou nuança) a questão em aberto do wake pós-aprovação (AD-006).
+- **Ao retomar**: se o teste funcional do Increment 1 rodar ponta a ponta, registrar como aprendizado; então abrir o **Increment 2** (agente Tech Lead) — Specify já esboçada (CRP-09..12).
