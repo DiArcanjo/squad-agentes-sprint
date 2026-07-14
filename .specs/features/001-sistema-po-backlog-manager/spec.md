@@ -13,6 +13,13 @@ e sujeito a inconsistência de padrão. O objetivo é automatizar a decomposiç�
 PBI → Task Dev) e a materialização no Azure, preservando um **gate de aprovação humano** no meio e uma
 **separação estrita de poderes** (quem lê ≠ quem escreve), para conter risco.
 
+> **Hierarquia de portfólio do time (Squad Plugins).** A taxonomia completa do board é
+> `Tema → Iniciativa → Epic → Feature → PBI → Task`. **Tema** e **Iniciativa** são os dois níveis de
+> **portfólio**, geridos pela Diana (priorização), acima do que os agentes tocam. O PO recebe uma
+> **Iniciativa** já priorizada e **começa a decompor no Epic** — nunca cria Tema nem Iniciativa. Por isso o
+> restante desta spec fala da árvore a partir do Epic (`Epic → Feature → PBI → Task Dev`): é o recorte que
+> os agentes de fato operam.
+
 ## Goals
 
 - [x] Decompor automaticamente uma iniciativa em uma árvore Epic → Feature → PBI → Task Dev, com cada PBI na Definition of Ready.
