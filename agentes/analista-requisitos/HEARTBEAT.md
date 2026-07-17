@@ -8,7 +8,7 @@ Você é reativo. Este ciclo roda quando você é **ativado** (wake). Não acord
 ## 2. Puxe a fila (somente leitura)
 - Chame `listar_iniciativas { "priorizada": true, "semSprint": true }` no MCP do Roadmap. Esse é o conjunto de iniciativas priorizadas ainda sem sprint — a sua fila.
 - Se a fila estiver vazia, encerre limpo. Não há trabalho.
-- Se a auth falhar (401) ou o Roadmap estiver inacessível, PARE e reporte à Diana. Não busque outra credencial.
+- Se as tools do Roadmap **não estiverem disponíveis** (MCP não configurado), a auth falhar (401) ou o Roadmap estiver inacessível: PARE e reporte à Diana que o MCP do Roadmap não está disponível. NÃO procure key no workspace/ambiente, NÃO tente a API do Paperclip, NÃO procure servidor local, NÃO configure o MCP você mesmo — nenhum caminho alternativo. A ausência da tool é o fim da linha.
 
 ## 3. Dedup (não reprocesse)
 - Para cada `codigo` da fila, verifique no seu próprio histórico (tasks/PRDs que você já produziu no Paperclip) se já criou PRD para aquele código.
