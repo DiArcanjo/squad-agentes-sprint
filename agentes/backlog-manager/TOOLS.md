@@ -14,18 +14,28 @@
 - task_dev -> tipo "Task"
 
 ## Mapeamento de campos (JSON -> Azure)
-- titulo -> System.Title
-- descricao (Epic/Feature) -> System.Description
-- historia_usuario (PBI) -> campo de História de Usuário do PBI
-- description (PBI) -> System.Description (Contexto + AS-IS + TO-BE)
-- acceptance_criteria (PBI) -> Microsoft.VSTS.Common.AcceptanceCriteria (critérios + cenários de teste juntos)
-- tasks_dev (títulos) -> cada um vira um work item Task, com System.Title = o texto
+- titulo -> System.Title (texto puro)
+- descricao (Epic/Feature) -> System.Description (campo HTML)
+- historia_usuario (PBI) -> campo de História de Usuário do PBI (campo HTML)
+- description (PBI) -> System.Description (Contexto + AS-IS + TO-BE) (campo HTML)
+- acceptance_criteria (PBI) -> Microsoft.VSTS.Common.AcceptanceCriteria (critérios + cenários de teste juntos) (campo HTML)
+- tasks_dev (lista) -> cada item vira um work item Task: `titulo` -> System.Title; `descricao` -> System.Description (campo HTML)
 
 Assigned To (System.AssignedTo): NUNCA preencha. Deixe vazio em todos os itens.
+
+## Renderização HTML dos campos de texto longo (OBRIGATÓRIO)
+`System.Description`, `Microsoft.VSTS.Common.AcceptanceCriteria` e o campo de História de Usuário são campos **HTML** no Azure. O JSON traz esses valores em texto puro com quebras de linha (`\n`). Se você gravar o texto cru, o Azure **colapsa as quebras** e o conteúdo gruda numa linha só (bug observado no critério de aceite). Antes de gravar, **renderize como HTML**:
+1. Escape os caracteres especiais, nesta ordem: `&` -> `&amp;`, depois `<` -> `&lt;` e `>` -> `&gt;`.
+2. Converta cada quebra de linha `\n` em `<br>`.
+
+Aplique a: `description` e `acceptance_criteria` (PBI), `historia_usuario` (PBI) e `descricao` (Task). NÃO aplique aos títulos (`System.Title` é texto puro).
 
 ## Comandos de referência (az boards)
 Criar um item (exemplo genérico):
 `az boards work-item create --organization https://dev.azure.com/dianasandbox --project agentic-sprint --type "Product Backlog Item" --title "<titulo>" --fields "System.Description=<...>" "Microsoft.VSTS.Common.AcceptanceCriteria=<...>"`
+
+Criar uma Task (com título e descrição; a descrição já renderizada em HTML):
+`az boards work-item create --organization https://dev.azure.com/dianasandbox --project agentic-sprint --type "Task" --title "<titulo>" --fields "System.Description=<descricao em HTML>"`
 
 Vincular a um parent (após criar, com os dois IDs):
 `az boards work-item relation add --organization https://dev.azure.com/dianasandbox --id <id_filho> --relation-type parent --target-id <id_pai>`

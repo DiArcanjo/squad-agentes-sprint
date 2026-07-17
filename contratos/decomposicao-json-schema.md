@@ -24,8 +24,8 @@ Relacionado: `.specs/features/001-sistema-po-backlog-manager/spec.md` (requisito
             "description": "Contexto da demanda: <...>\n\nAS-IS: <...>\n\nTO-BE: <...>",
             "acceptance_criteria": "Critérios de Aceite:\n1. Dado <...>, quando <...>, então <...>\n\nCenários de Teste:\n- Cenário 1 — <...>",
             "tasks_dev": [
-              "1 - <título da Task Dev>",
-              "2 - <título da Task Dev>"
+              { "titulo": "1 - <título da Task Dev>", "descricao": "<o que fazer nesta task; texto curto>" },
+              { "titulo": "2 - <título da Task Dev>", "descricao": "<...>" }
             ]
           }
         ]
@@ -41,7 +41,8 @@ Relacionado: `.specs/features/001-sistema-po-backlog-manager/spec.md` (requisito
 - O **aninhamento define o parentesco**: `features` dentro do `epic`, `pbis` dentro da feature, `tasks_dev` dentro do pbi. O Backlog Manager cria de cima para baixo, passando o ID do pai como parent do filho.
 - `description` carrega **Contexto, AS-IS e TO-BE juntos** (mapeia para o campo **Description** do Azure).
 - `acceptance_criteria` carrega os **Critérios de Aceite e os Cenários de Teste juntos** (mapeia para o campo **Acceptance Criteria** do Azure).
-- `tasks_dev` é uma **lista de títulos de Task**, cada um prefixado com número sequencial. Cada título vira um work item Task.
+- **Campos de texto longo são HTML no Azure** (`description`, `acceptance_criteria`, `historia_usuario` e a `descricao` de cada Task): no JSON vêm em texto puro com quebras `\n`; o Backlog Manager os **renderiza como HTML** ao escrever (escapa `&`/`<`/`>` e converte `\n` em `<br>`) — senão o Azure colapsa as quebras e o conteúdo gruda numa linha só.
+- `tasks_dev` é uma **lista de Tasks**, cada uma com `titulo` (prefixado com número sequencial) e `descricao` (o que fazer). Cada item vira um work item Task: `titulo` → System.Title, `descricao` → System.Description.
 - O JSON **NÃO** inclui `Assigned To`, `Story Points`, `Area`, `Iteration` ou qualquer campo de atribuição ou estimativa (ver AD-005).
 
 ## Mapeamento de tipos JSON → Azure

@@ -22,11 +22,12 @@ Crie os work items na dianasandbox/agentic-sprint, de cima para baixo, sempre pa
 1. Crie o Epic. Guarde o ID retornado.
 2. Para cada Feature: crie com parent = ID do Epic. Guarde o ID de cada Feature.
 3. Para cada PBI da Feature: crie com parent = ID da Feature. Guarde o ID de cada PBI.
-4. Para cada Task Dev do PBI: crie com parent = ID do PBI.
+4. Para cada Task Dev do PBI: crie com parent = ID do PBI, preenchendo `System.Title` (do `titulo`) e `System.Description` (do `descricao` da task).
 
 Regras de criação (ver comandos no TOOLS.md):
 - Assigned To SEMPRE vazio, em todos os itens. Nunca atribua.
 - Preencha só os campos de conteúdo que o JSON fornece (título, descrição, história, critérios).
+- Campos de texto longo (Description, Acceptance Criteria, História de Usuário, descrição da Task) são **HTML** no Azure: renderize como HTML antes de gravar (escape `&`/`<`/`>` e converta `\n` em `<br>`), conforme o `TOOLS.md`. Sem isso, o Azure colapsa as quebras e o conteúdo gruda numa linha só.
 - Não preencha Story Points, Area, Iteration nem estimativa.
 - Se a criação de qualquer item falhar, PARE imediatamente. Não continue criando os itens seguintes. Reporte à Diana o que já foi criado (com IDs) e onde parou, para ela poder limpar ou retomar.
 

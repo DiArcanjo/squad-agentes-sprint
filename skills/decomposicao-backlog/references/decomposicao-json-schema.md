@@ -28,8 +28,8 @@ Backlog Manager materializar no Azure). Os dois representam exatamente a mesma �
             "description": "Contexto da demanda: <...>\n\nAS-IS: <...>\n\nTO-BE: <...>",
             "acceptance_criteria": "Critérios de Aceite:\n1. Dado <...>, quando <...>, então <...>\n\nCenários de Teste:\n- Cenário 1 — <...>",
             "tasks_dev": [
-              "1 - <título da Task Dev>",
-              "2 - <título da Task Dev>"
+              { "titulo": "1 - <título da Task Dev>", "descricao": "<o que fazer nesta task; texto curto>" },
+              { "titulo": "2 - <título da Task Dev>", "descricao": "<...>" }
             ]
           }
         ]
@@ -47,8 +47,12 @@ Backlog Manager materializar no Azure). Os dois representam exatamente a mesma �
 - `description` carrega **Contexto, AS-IS e TO-BE juntos** (mapeia para o campo Description do Azure).
 - `acceptance_criteria` carrega os **Critérios de Aceite e os Cenários de Teste juntos** (mapeia para o campo
   Acceptance Criteria do Azure).
-- `tasks_dev` é uma **lista de títulos de Task**, cada um prefixado com o número sequencial. Cada título vira
-  um work item Task.
+- **Campos de texto longo são HTML no Azure** (`description`, `acceptance_criteria`, `historia_usuario` e a
+  `descricao` de cada Task): no JSON vêm em texto puro com quebras `\n`; o Backlog Manager os **renderiza como
+  HTML** ao escrever (escapa `&`/`<`/`>` e converte `\n` em `<br>`) — senão o Azure colapsa as quebras e o
+  conteúdo gruda numa linha só.
+- `tasks_dev` é uma **lista de Tasks**, cada uma com `titulo` (prefixado com número sequencial) e `descricao`
+  (o que fazer). Cada item vira um work item Task: `titulo` → System.Title, `descricao` → System.Description.
 - **NÃO** inclua `Assigned To`, `Story Points`, `Area`, `Iteration` ou qualquer campo de atribuição ou estimativa.
 - JSON válido e parseável. Sem comentários, sem vírgula sobrando, sem texto fora do JSON.
 

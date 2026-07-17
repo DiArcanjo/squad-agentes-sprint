@@ -141,6 +141,14 @@
 - **Date**: 2026-07-14
 - **Status**: active
 
+### AD-017
+- **Decision**: Dois ajustes no contrato/materialização da feature 001, a partir de defeitos vistos no teste E2E: (1) `tasks_dev` deixa de ser lista de títulos e passa a ser **lista de objetos `{ titulo, descricao }`** — cada Task ganha `System.Description` própria; (2) o Backlog Manager passa a **renderizar como HTML** os campos de texto longo do Azure (Description, Acceptance Criteria, História de Usuário e a descrição da Task): escapa `&`/`<`/`>` e converte `\n` em `<br>`.
+- **Reason**: O E2E anterior mostrou (a) Tasks criadas só com título (a Diana quer Task com descrição) e (b) o Acceptance Criteria chegando ao Azure numa linha só — esses campos são HTML e `\n` em texto puro colapsa na renderização.
+- **Trade-off**: (1) `tasks_dev` mais verboso; o PO/skill agora geram uma descrição curta por Task. (2) O BM faz uma transformação de formato (texto→HTML) na escrita — mas é **mapeamento JSON→Azure** (parte do trabalho do escritor, como o mapa de tipos), não mudança de conteúdo; preserva a identidade "escritor fiel".
+- **Scope**: Feature 001 — contrato `decomposicao_json`, método do PO (skill) e materialização do BM. Corrige defeitos ligados a POBM-10..12.
+- **Date**: 2026-07-14
+- **Status**: active
+
 ---
 
 ## Aprendizados
@@ -148,6 +156,7 @@
 Lições operacionais colhidas durante a construção manual do sistema no Paperclip. Registradas aqui porque
 não há camada LESSONS automatizada neste projeto (sem código para verificar). Referenciam decisões acima.
 
+- **Campos de texto longo do Azure (Description, Acceptance Criteria, História de Usuário) são HTML.** Gravar texto puro com `\n` faz o Azure colapsar as quebras e o conteúdo grudar numa linha só (bug visto no teste E2E: o critério de aceite virou um blob). Renderizar como HTML na escrita (escapar `&`/`<`/`>` e converter `\n` em `<br>`). → Origina AD-017.
 - **O vetor de acesso real de um agente é `Bash` + CLI (`az`), não MCP.** Auditoria de configuração sozinha não pega esse caminho; só o teste funcional pega. → Reforça AD-002/AD-003 (contenção por credencial escopada) e AD-009 (contenção por run policy).
 - **Instabilidade da sessão do Claude Code** (erros "Not logged in / resume session unavailable") faz o handoff *parecer* quebrado. Estabilizar o login é pré-requisito para testar comportamento. → Contexto para AD-006. **Ressalva (13/07/2026)**: a passada de consistência revelou que nem toda falha de handoff era da sessão — havia uma dessincronização real de instrução entre os dois lados do handoff (o `po/HEARTBEAT.md §5` e o `backlog-manager/HEARTBEAT.md` discordavam sobre onde ficavam a aprovação e o `decomposicao_json`). Resolvido pela **Forma B** (ver AD-010 e POBM-22): o PO copia o `decomposicao_json` inteiro no corpo da task de handoff; o BM lê do próprio corpo; e a existência da task de handoff é a autorização (o BM não navega entre tasks nem checa confirmation ACCEPTED). Lição: não atribuir toda instabilidade de comportamento à sessão sem antes cruzar as instruções dos dois lados do handoff.
 - **O Paperclip não reacorda o PO de forma 100% confiável após a aprovação.** Quando trava, *Run Heartbeat* manual força o wake. O mecanismo nativo de automação do Paperclip (abas *Routines* e *Goals*) ainda não foi investigado como solução robusta. → Contexto para AD-006; ver Questões em aberto.

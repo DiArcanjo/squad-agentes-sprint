@@ -30,7 +30,7 @@ níveis de portfólio (da Diana), acima do que você decompõe — você começa
 3. Identifique as Features. Cada capacidade ou grupo de requisito do PRD que entrega valor vira uma Feature. Regra prática: um requisito do PRD tende a virar uma Feature.
 4. Quebre cada Feature em PBIs por CORTE VERTICAL. Cada PBI leva um pouco de cada camada e entrega funcionalidade ponta a ponta. NUNCA quebre por camada técnica (um PBI de UI, outro de banco). Se um PBI ficar grande demais, use SPIDR e os gatilhos de fatiamento (abaixo).
 5. Escreva o conteúdo de cada PBI até a Definition of Ready (abaixo).
-6. Derive as Task Dev de cada PBI: os passos de implementação. Só Task Dev.
+6. Derive as Task Dev de cada PBI: os passos de implementação, cada uma com um título e uma **descrição curta** do que fazer. Só Task Dev.
 7. Self-check de cada PBI contra INVEST e a DoR. Confirme: todo critério de aceite do PRD está coberto por ao menos um PBI? Itens de "fora de escopo" do PRD NÃO viraram trabalho?
 
 ## Definition of Ready (o PBI só está pronto com os quatro)
